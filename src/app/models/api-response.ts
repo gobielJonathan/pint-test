@@ -45,8 +45,11 @@ export interface PriceChange {
 
 export interface CurrencyDataTable {
   currencyGroup: string;
+  name: string;
+  price: number;
   day: number;
   week: number;
   month: number;
   year: number;
+  image: string;
 }
