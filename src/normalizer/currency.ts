@@ -12,7 +12,7 @@ export function normalizeCurrency(currencies: CurrencyResponse) {
           currencySymbol,
           name,
           logo,
-        } as Currency)
+        }) as Currency,
     );
 
   return currenciesFiltered;
