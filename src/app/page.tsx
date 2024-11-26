@@ -1,35 +1,52 @@
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import fetcher from "@/lib/fetcher";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-export default function Home() {
+import Component from "./client";
+import { CurrencyResponse, PriceChangeResponse } from "./models/api-response";
+
+export default async function Page() {
+  const [currenciesResponse, priceChangeResponse] = await Promise.all([
+    fetcher(`${process.env.ENDPOINT}/wallet/supportedCurrencies`),
+    fetcher(`${process.env.ENDPOINT}/trade/price-changes`),
+  ]);
+
+  const currencies = currenciesResponse as CurrencyResponse;
+  const priceChange = priceChangeResponse as PriceChangeResponse;
+
+  if (currencies.code !== "success" || priceChange.code !== "success") {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Error</AlertTitle>
+        <AlertDescription>
+          {currencies.message || priceChange.message}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const priceChangeToDict = priceChange.payload.reduce((acc, curr) => {
+    const { pair: _pair, ...data } = curr;
+    /**
+     * @note in response api, the value pair is btc/idr
+     * we need to get only the token name "btc"
+     */
+    const [pair] = _pair.split("/");
+    return {
+      ...acc,
+      [pair]: data,
+    };
+  }, {});
+
+  const excludedCurrencies = ["IDR"];
+  const currenciesFiltered = currencies.payload.filter(
+    (data) => !excludedCurrencies.includes(data.currencyGroup)
+  );
   return (
-    <div>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Invoice</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Method</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">INV001</TableCell>
-            <TableCell>Paid</TableCell>
-            <TableCell>Credit Card</TableCell>
-            <TableCell className="text-right">$250.00</TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </div>
+    <Component
+      currencies={currenciesFiltered}
+      priceChange={priceChangeToDict}
+    ></Component>
   );
 }
