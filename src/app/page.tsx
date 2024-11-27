@@ -58,11 +58,11 @@ export default async function Page(props: {
   const normalizedCurrencies = normalizeCurrency(currencies.payload, page);
 
   const normalizeCurrenciesTopMovers = normalizeCurrencyTopMovers(
-    currencies.payload
+    currencies.payload,
   );
 
   const normalizedCurrencySimpleList = normalizeCurrencySimpleList(
-    currencies.payload
+    currencies.payload,
   );
 
   return (
