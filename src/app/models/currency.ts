@@ -5,3 +5,11 @@ export interface Currency {
   name: string;
   logo: string;
 }
+
+export interface CurrencyPagination {
+  totalPage: number;
+  page: number;
+  data: Currency[];
+}
+
+export type Pair = string;

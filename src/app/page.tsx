@@ -1,17 +1,26 @@
+import { Metadata } from "next";
+
 import fetcher from "@/lib/fetcher";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
 import Component from "./(routes)/homepage/client";
 import { CurrencyResponse, PriceChangeResponse } from "./models/api-response";
-import { normalizeCurrency } from "@/normalizer/currency";
-import { Metadata } from "next";
+import {
+  normalizeCurrency,
+  normalizeCurrencyTopMovers,
+} from "@/normalizer/currency";
 
 export const metadata: Metadata = {
   title: "Harga Crypto hari ini (IDR)",
 };
 
-export default async function Page() {
+export default async function Page(props: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { searchParams } = props;
+  const page = Number(searchParams.page || 1);
+
   const [currenciesResponse, priceChangeResponse] = await Promise.all([
     fetcher(`${process.env.ENDPOINT}/wallet/supportedCurrencies`),
     fetcher(`${process.env.ENDPOINT}/trade/price-changes`),
@@ -45,11 +54,16 @@ export default async function Page() {
     };
   }, {});
 
-  const normalizedCurrencies = normalizeCurrency(currencies);
+  const normalizedCurrencies = normalizeCurrency(currencies.payload, page);
+
+  const normalizeCurrenciesTopMovers = normalizeCurrencyTopMovers(
+    currencies.payload
+  );
 
   return (
     <Component
       currencies={normalizedCurrencies}
+      topMovers={normalizeCurrenciesTopMovers}
       priceChange={priceChangeToDict}
     ></Component>
   );

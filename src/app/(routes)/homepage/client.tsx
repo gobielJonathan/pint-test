@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { CurrencyDataTable, PriceChange } from "../../models/api-response";
-import { Currency } from "../../models/currency";
+import { Currency, CurrencyPagination, Pair } from "../../models/currency";
 
 import { DataTable } from "./components/data-table";
 import MoverCard from "./components/mover-card";
@@ -23,10 +23,9 @@ import { columns } from "./columns";
 
 import fetcher from "@/lib/fetcher";
 
-type Pair = string;
-
 export default function Component(props: {
-  currencies: Currency[];
+  currencies: CurrencyPagination;
+  topMovers: Currency[];
   priceChange: Record<Pair, PriceChange>;
 }) {
   const { data: _priceChange, refetch } = useQuery({
@@ -40,9 +39,7 @@ export default function Component(props: {
     refetchInterval: 5_000,
   });
 
-  const [topMovers] = useState(props.currencies.slice(0, 5));
-
-  const toDataTable = props.currencies.map((currency) => {
+  const toDataTable = props.currencies.data.map((currency) => {
     const priceChange = _priceChange[currency.currencySymbol.toLowerCase()];
     return {
       currencyGroup: currency.currencyGroup,
@@ -71,7 +68,7 @@ export default function Component(props: {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="overflow-y-auto max-h-72">
-              {props.currencies.map((currency) => (
+              {props.topMovers.map((currency) => (
                 <Link
                   target="_blank"
                   href={`https://pintu.co.id/market/${currency.currencyGroup}`}
@@ -94,7 +91,7 @@ export default function Component(props: {
 
       <h5 className="text-xl font-bold">🔥 Top Movers (24 Jam)</h5>
       <div className="flex mt-4 my-6 gap-4 overflow-x-auto">
-        {topMovers.map((top) => {
+        {props.topMovers.map((top) => {
           const priceChange = _priceChange[top.currencySymbol.toLowerCase()];
 
           return (
@@ -114,7 +111,11 @@ export default function Component(props: {
           );
         })}
       </div>
-      <DataTable columns={columns} data={toDataTable} />
+      <DataTable
+        columns={columns}
+        data={toDataTable}
+        totalPage={props.currencies.totalPage}
+      />
     </div>
   );
 }
