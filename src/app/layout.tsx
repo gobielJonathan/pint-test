@@ -1,7 +1,7 @@
 "use client";
 
 import localFont from "next/font/local";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import "./globals.css";
@@ -17,11 +17,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   const [queryClient] = useState(new QueryClient());
 
   return (

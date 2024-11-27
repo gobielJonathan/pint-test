@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { Search } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -34,7 +32,7 @@ export default function Component(props: {
   topMovers: Currency[];
   priceChange: Record<Pair, PriceChange>;
 }) {
-  const { data: _priceChange, refetch } = useQuery({
+  const { data: _priceChange } = useQuery({
     queryKey: ["price-change"],
     queryFn: () => fetcher(`${process.env.ENDPOINT}/trade/price-changes`),
     initialData: props.priceChange,
@@ -76,6 +74,7 @@ export default function Component(props: {
             <DropdownMenuContent className="overflow-y-auto max-h-72">
               {props.currenciesSimpleList.map((currency) => (
                 <Link
+                  key={currency.currencyGroup}
                   target="_blank"
                   href={`https://pintu.co.id/market/${currency.currencyGroup}`}
                 >
@@ -86,7 +85,9 @@ export default function Component(props: {
                       width={32}
                       height={32}
                     />
-                    <span>{currency.currencyGroup}</span>
+                    <span data-testid={`find-redir-${currency.currencyGroup}`}>
+                      {currency.currencyGroup}
+                    </span>
                   </DropdownMenuItem>
                 </Link>
               ))}

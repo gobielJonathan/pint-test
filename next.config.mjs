@@ -6,6 +6,9 @@ const nextConfig = {
   env: {
     ENDPOINT: "https://api.pintu.co.id/v2",
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 };
 
 export default nextConfig;

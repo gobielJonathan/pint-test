@@ -13,7 +13,7 @@ const excludedCurrencies = ["IDR"];
  */
 export function normalizeCurrency(
   currencies: CurrencyResponse["payload"],
-  page: number
+  page: number,
 ) {
   const currenciesFiltered = currencies
     .slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
@@ -26,7 +26,7 @@ export function normalizeCurrency(
           currencySymbol,
           name,
           logo,
-        } satisfies Currency)
+        }) satisfies Currency,
     );
 
   return {
@@ -37,7 +37,7 @@ export function normalizeCurrency(
 }
 
 export function normalizeCurrencyTopMovers(
-  currencies: CurrencyResponse["payload"]
+  currencies: CurrencyResponse["payload"],
 ) {
   const currenciesFiltered = currencies
     .filter((data) => !excludedCurrencies.includes(data.currencyGroup))
@@ -50,14 +50,14 @@ export function normalizeCurrencyTopMovers(
           currencySymbol,
           name,
           logo,
-        } satisfies Currency)
+        }) satisfies Currency,
     );
 
   return currenciesFiltered;
 }
 
 export function normalizeCurrencySimpleList(
-  currencies: CurrencyResponse["payload"]
+  currencies: CurrencyResponse["payload"],
 ) {
   const currenciesFiltered = currencies
     .filter((data) => !excludedCurrencies.includes(data.currencyGroup))
@@ -66,7 +66,7 @@ export function normalizeCurrencySimpleList(
         ({
           currencyGroup,
           logo,
-        } satisfies CurrencySimpleList)
+        }) satisfies CurrencySimpleList,
     );
 
   return currenciesFiltered;

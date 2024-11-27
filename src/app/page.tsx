@@ -10,7 +10,7 @@ import {
   normalizeCurrency,
   normalizeCurrencySimpleList,
   normalizeCurrencyTopMovers,
-} from "@/normalizer/currency";
+} from "./(routes)/homepage/normalizer/currency";
 
 export const metadata: Metadata = {
   title: "Harga Crypto hari ini (IDR)",
