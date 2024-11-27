@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
   const searchParams = useSearchParams();
 
   const [pagination, setPagination] = useState({
-    pageIndex: initialPageIndex,
+    pageIndex: initialPageIndex - 1,
     pageSize: 10,
   });
 
@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
 
       // Update the query string, for refetch the data
       const params = new URLSearchParams(searchParams);
-      params.set("page", newPageIndex.toString());
+      params.set("page", (newPageIndex + 1).toString());
       router.push(`${pathname}?${params}`);
     },
     onSortingChange: setSorting,

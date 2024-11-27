@@ -15,7 +15,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { CurrencyDataTable, PriceChange } from "../../models/api-response";
-import { Currency, CurrencyPagination, Pair } from "../../models/currency";
+import {
+  Currency,
+  CurrencyPagination,
+  CurrencySimpleList,
+  Pair,
+} from "../../models/currency";
 
 import { DataTable } from "./components/data-table";
 import MoverCard from "./components/mover-card";
@@ -25,6 +30,7 @@ import fetcher from "@/lib/fetcher";
 
 export default function Component(props: {
   currencies: CurrencyPagination;
+  currenciesSimpleList: CurrencySimpleList[];
   topMovers: Currency[];
   priceChange: Record<Pair, PriceChange>;
 }) {
@@ -68,7 +74,7 @@ export default function Component(props: {
               </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="overflow-y-auto max-h-72">
-              {props.topMovers.map((currency) => (
+              {props.currenciesSimpleList.map((currency) => (
                 <Link
                   target="_blank"
                   href={`https://pintu.co.id/market/${currency.currencyGroup}`}

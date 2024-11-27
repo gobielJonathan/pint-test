@@ -6,6 +6,8 @@ export interface Currency {
   logo: string;
 }
 
+export type CurrencySimpleList = Pick<Currency, "logo" | "currencyGroup">;
+
 export interface CurrencyPagination {
   totalPage: number;
   page: number;

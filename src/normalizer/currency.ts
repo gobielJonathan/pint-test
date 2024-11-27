@@ -1,5 +1,9 @@
-import { Currency, CurrencyResponse } from "@/app/models/api-response";
-import { CurrencyPagination } from "@/app/models/currency";
+import { CurrencyResponse } from "@/app/models/api-response";
+import {
+  CurrencyPagination,
+  Currency,
+  CurrencySimpleList,
+} from "@/app/models/currency";
 
 const ITEMS_PER_PAGE = 20;
 const excludedCurrencies = ["IDR"];
@@ -22,7 +26,7 @@ export function normalizeCurrency(
           currencySymbol,
           name,
           logo,
-        } as Currency)
+        } satisfies Currency)
     );
 
   return {
@@ -46,7 +50,23 @@ export function normalizeCurrencyTopMovers(
           currencySymbol,
           name,
           logo,
-        } as Currency)
+        } satisfies Currency)
+    );
+
+  return currenciesFiltered;
+}
+
+export function normalizeCurrencySimpleList(
+  currencies: CurrencyResponse["payload"]
+) {
+  const currenciesFiltered = currencies
+    .filter((data) => !excludedCurrencies.includes(data.currencyGroup))
+    .map(
+      ({ currencyGroup, logo }) =>
+        ({
+          currencyGroup,
+          logo,
+        } satisfies CurrencySimpleList)
     );
 
   return currenciesFiltered;

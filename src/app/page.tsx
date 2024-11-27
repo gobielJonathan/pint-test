@@ -8,6 +8,7 @@ import Component from "./(routes)/homepage/client";
 import { CurrencyResponse, PriceChangeResponse } from "./models/api-response";
 import {
   normalizeCurrency,
+  normalizeCurrencySimpleList,
   normalizeCurrencyTopMovers,
 } from "@/normalizer/currency";
 
@@ -60,9 +61,14 @@ export default async function Page(props: {
     currencies.payload
   );
 
+  const normalizedCurrencySimpleList = normalizeCurrencySimpleList(
+    currencies.payload
+  );
+
   return (
     <Component
       currencies={normalizedCurrencies}
+      currenciesSimpleList={normalizedCurrencySimpleList}
       topMovers={normalizeCurrenciesTopMovers}
       priceChange={priceChangeToDict}
     ></Component>
